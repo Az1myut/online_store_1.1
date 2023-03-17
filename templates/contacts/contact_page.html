@@ -23,8 +23,11 @@
                                 <h3 class="mb-4">Get in touch</h3>
                                 <div id="form-message-warning" class="mb-4"></div>
                 
-                                <form method="POST" id="contactForm" name="contactForm">
+                                <form method="POST" action="{% url 'contacts:contact_page_form_view' %}">
+                                    {% csrf_token %}
                                     {{ form.as_p }}
+
+                                    <input type="submit" value="Send message">
                                 </form>
                             </div>
                         </div>

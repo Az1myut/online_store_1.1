@@ -10,13 +10,15 @@ class SingleProduct(models.Model):
     number_products = models.PositiveBigIntegerField(verbose_name='Количество товаров', blank=True, null=True)
     in_store = models.BooleanField(verbose_name='Доступен', default=True)
     images = models.ManyToManyField(to='ProductImage', verbose_name='Картины',blank =True)   
+    order = models.SmallIntegerField(default=0, db_index=True)
 
     #CUSTOM MANAGERS
-    latest_products = LatestProductsManager()
+    # latest_products = LatestProductsManager()
+    
     class Meta:
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
-        ordering = ['name',]
+        ordering = ['order', 'name']
 
     def __str__(self):
         return f'{self.category}-{self.name}'

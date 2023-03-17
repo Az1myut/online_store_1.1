@@ -1,15 +1,16 @@
-from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.views.generic import ListView, FormView
-from django.views.generic.base import TemplateView
-from .forms import ContactPageForm
-from .models import ContactPage
 
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.views.generic import ListView, FormView, DetailView
+from django.views.generic.base import TemplateView
+from .forms import ContactFormDB
+from .models import ContactPage
+from icecream import ic
 # Create your views here.
 
-class ContactPageFormView(FormView):
+class ContactPageDetailView(TemplateView):
     template_name = 'contacts/contact_page.html'
-    form_class = ContactPageForm
+    form_class = ContactFormDB
     success_url = reverse_lazy('contacts:contact_page_form_view')
     
     def get_context_data(self, **kwargs):
@@ -17,7 +18,15 @@ class ContactPageFormView(FormView):
         context['form'] = self.form_class
         context['contacts'] = ContactPage.objects.get(pk=1)
 
+        return context
 
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
+    def post(self, request, *args, **kwargs ):
+        ic('post')
+        form = ContactFormDB(request.POST)
+        if form.is_valid():
+            form.save()
+        
+         
+        return redirect('contacts:contact_page_form_view')
+    # def get(self, request, *args, **kwargs):
+    #     return super().get(request, *args, **kwargs)
