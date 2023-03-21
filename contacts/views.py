@@ -11,8 +11,6 @@ from icecream import ic
 class ContactPageDetailView(TemplateView):
     template_name = 'contacts/contact_page.html'
     form_class = ContactFormDB
-    success_url = reverse_lazy('contacts:contact_page_form_view')
-    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = self.form_class
@@ -21,12 +19,19 @@ class ContactPageDetailView(TemplateView):
         return context
 
     def post(self, request, *args, **kwargs ):
-        ic('post')
-        form = ContactFormDB(request.POST)
-        if form.is_valid():
-            form.save()
+        template_name = 'contacts/contact_page.html'
+        context = self.get_context_data()
         
-         
-        return redirect('contacts:contact_page_form_view')
-    # def get(self, request, *args, **kwargs):
-    #     return super().get(request, *args, **kwargs)
+        form = ContactFormDB(request.POST)
+        context['form'] = form
+        if form.is_valid():
+            form.save(commit=False)
+            return redirect('contacts:success_contact_message')
+        else:
+            context['message'] = 'Не правильно заполнены данные'
+            return render(request, template_name, context)
+
+
+class SuccessContactMeassageView(TemplateView):
+    template_name = 'contacts/success_contact_meassage.html'
+    

@@ -4,7 +4,7 @@ class SingleProduct(models.Model):
     name = models.CharField(verbose_name='Название', max_length=200)
     description = models.TextField(verbose_name='Описание',blank=True)
     category = models.ForeignKey(verbose_name='Категория товара', to='Category', on_delete=models.CASCADE, default=1, related_name='products')
-    initial_price = models.PositiveBigIntegerField(verbose_name='Цена')
+    initial_price = models.BigIntegerField(verbose_name='Цена')
     discount = models.PositiveIntegerField(verbose_name='Процент скидки',blank=True)
     end_price = models.PositiveBigIntegerField(verbose_name='Цена с учетом скидки',editable=False)
     number_products = models.PositiveBigIntegerField(verbose_name='Количество товаров', blank=True, null=True)

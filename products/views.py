@@ -21,7 +21,8 @@ class CategoryDetailView(DetailView):
 
 def products_bulk_edit(request):
     ProductFormSet = modelformset_factory(
-        SingleProduct, form=ProductForm, fields=('name', 'description', 'in_store'), extra=1, can_delete=True, can_order=True
+        SingleProduct, form=ProductForm, fields=('name', 'description', 'in_store', 'initial_price'),
+         extra=1, can_delete=True, can_order=True
     )
     template_name = 'products/product_bulk_edit.html'
     context = {}
