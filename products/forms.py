@@ -25,3 +25,20 @@ class ProductImageForm(forms.ModelForm):
     class Meta:
         model = ProductImage
         fields = '__all__'
+
+    def clean(self):
+        erorrs = {}
+
+        cleaned_data = super().clean()
+        if len(cleaned_data['description'])>50:
+            # erorrs['description'] = ValidationError('Длина описания не может превышать 50 символов')
+            self.add_error('description', ValidationError('Длина описания не может превышать 50 символов'))
+
+        # if erorrs:
+        #     raise ValidationError(erorrs)
+
+
+
+
+
+

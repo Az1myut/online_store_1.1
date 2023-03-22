@@ -47,6 +47,7 @@ class Category(models.Model):
 class ProductImage(models.Model):
     image = models.ImageField(verbose_name='Картина', upload_to ='products/%d%m%Y', blank = True)
     description = models.CharField(verbose_name='Описание', max_length=200)
+    order = models.PositiveSmallIntegerField(default=0, db_index=True)
 
     class Meta:
         verbose_name = 'Картина Продукта'
