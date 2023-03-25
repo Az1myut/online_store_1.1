@@ -20,6 +20,14 @@ class CategoryDetailView(DetailView):
     model = Category
 
 
+
+
+
+
+
+
+
+
 def products_bulk_edit(request):
     ProductFormSet = modelformset_factory(
         SingleProduct, form=ProductForm, fields=('name', 'description', 'in_store', 'initial_price'),
@@ -71,7 +79,7 @@ class ProductImageBulkEditListView(TemplateView):
                 return redirect('products:product_image_bulk_edit')
         else:
             self.get_context_data()['product_image_formset'] = formset
-            ic(formset.non_form_errors())
+            ic(formset.errors)
             return render(request, self.template_name, self.get_context_data())
 
         

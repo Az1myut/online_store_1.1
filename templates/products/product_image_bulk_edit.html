@@ -36,8 +36,29 @@
                             <div class="form-group">
                                 {{ product_image_formset.management_form  }}
                                 
-                                
+                                {{ product_image_formset.subject.errors }}
+                                {{ product_image_formset.name.label_tag }} 
                                 {{ product_image_formset.as_p }}
+
+                                
+                                
+                                {% comment %}
+                                    
+                              
+                                    
+                                {% for form in product_image_formset %}
+                                
+                                {% for error in form.non_filed_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                                    
+                                    
+                                {% endfor %}
+
+                                {% endcomment %}
+
+                                
+                                    
 
                                 
                                 
