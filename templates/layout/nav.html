@@ -11,7 +11,7 @@
 
             <div class="col-sm-6">
                 <div class="shopping-item">
-                    <a href="cart.html">Cart - <span class="cart-amunt">$0</span> <i class="fa fa-shopping-cart"></i>
+                    <a href="{% url 'cart:cart_detail' %}">Cart - <span class="cart-amunt">$0</span> <i class="fa fa-shopping-cart"></i>
                         <span class="product-count">5</span></a>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                     {% comment %}
                     <li><a href="{% url 'products:show_single_product_page' 1 %}">Single product</a></li>
                     {% endcomment %}
-                    <li><a href="cart.html">Cart</a></li>
+                    <li><a href="{% url 'cart:cart_detail' %}">Cart</a></li>
                     <li><a href="checkout.html">Checkout</a></li>
                     
                     <li><a href="#">Others</a></li>

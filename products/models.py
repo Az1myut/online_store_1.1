@@ -11,6 +11,7 @@ class SingleProduct(models.Model):
     in_store = models.BooleanField(verbose_name='Доступен', default=True)
     images = models.ManyToManyField(to='ProductImage', verbose_name='Картины',blank =True)   
     order = models.SmallIntegerField(default=0, db_index=True)
+    
 
     #CUSTOM MANAGERS
     # latest_products = LatestProductsManager()

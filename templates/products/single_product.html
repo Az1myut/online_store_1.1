@@ -111,11 +111,20 @@
                                     <ins>${{ product.initial_price }}</ins> <del>${{ product.end_price }}</del>
                                 </div>    
                                 
-                                <form action="" class="cart">
-                                    <div class="quantity">
-                                        <input type="number" size="4" class="input-text qty text" title="Qty" value="1" name="quantity" min="1" step="1">
+                                <form action="{% url 'cart:cart_add' product.id %}" method="post" class="cart">
+                                    {% csrf_token %}
+                                    {{ form.update }}
+
+                                    <div class="row animate-box">
+                                        <input type="text" name="quantity" value="1">
+                                        <input type="hidden" name="page_id" value="{{ product.pk }}">
                                     </div>
-                                    <button class="add_to_cart_button" type="submit">Add to cart</button>
+
+                                    <div class="row animate-box">
+                                        <button class="add_to_cart_button" type="submit">Add to cart</button>
+                                    </div>
+
+                
                                 </form>   
                                 
                                 <div class="product-inner-category">

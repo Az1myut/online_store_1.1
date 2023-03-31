@@ -47,7 +47,12 @@ def products_bulk_edit(request):
                     product.save()
             return redirect('products:products_bulk_edit')
     else:
-        formset = ProductFormSet(queryset=SingleProduct.objects.all())
+        formset = ProductFormSet(queryset=SingleProduct.objects.prefetch_related('images'))
+        '''
+            Здесь  я использую prefetch_related  к полю images так как там ManyToMany relationship
+            prefetch_related нужен чтобы уменьшить колво запросов в базу данных
+            а этот метод помогает сразу брать поле images при первом запросе к продукты
+        '''
     context['product_form_set'] = formset
     return render(request, template_name, context)
 
