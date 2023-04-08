@@ -44,6 +44,11 @@ INSTALLED_APPS = [
     'orders.apps.OrdersConfig',
     'cart',
     'customers.apps.CustomersConfig',
+    'users',
+    #REST FRAMEWORK
+    'rest_framework',
+    #APPs
+    'captcha',
 ]
 
 MIDDLEWARE = [
@@ -136,4 +141,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
+# AUTH_USER_MODEL = 'users.CustomUser'
+
+
 CART_SESSION_ID = 'cart'
+
+#CAPTCHA
+
+CAPTCHA_CHALLENGE_FUNCT ='captcha.helpers.math_challenge'
+
+CAPTCHA_BACKGROUND_COLOR = '#FFFFFF'
+CAPTCHA_LENGTH = 6

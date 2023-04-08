@@ -1,6 +1,5 @@
 
-from re import template
-from turtle import back
+from icecream import ic
 from django.shortcuts import render
 
 # Create your views here.
@@ -14,11 +13,37 @@ from cart.services.cart import Cart
 from django.db import transaction
 from .models import Order, OrderItem
 
+def make_qrr(pk, cart=None):
+        import qrcode
+
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.ERROR_CORRECT_L,
+            box_size=10,
+            border=4
+        )
+        qr.add_data(
+            {
+                'order_url' : f"https://uzumbank.uz/ru/orders/{pk}",
+                'order_id' : pk,
+                'cart' : cart
+            }
+            )
+        qr.make()
+        img = qr.make_image(fill_color ='black', back_color ='white')
+        order_id = pk
+
+        img.save(f'media/qrs/order_{order_id}_qr.png')
+        return order_id
+
+
+
+
 def commit_handler():
     return 'Transaction done'
 # @transaction.atomic
 def order_create(request):
-    template_name = "pages/orders/order_payment.html"
+    template_name = "pages/orders/order_created.html"
     cart = Cart(request)
     if request.method == 'POST':
         form = OrderCreateForm(request.POST)
@@ -37,8 +62,10 @@ def order_create(request):
             order.city = form.cleaned_data.get('city')
 
             try:
+                
                 order.save()
                 transaction.savepoint_commit(save_point)
+                
 
             except:
                 transaction.rollback(save_point)
@@ -54,12 +81,16 @@ def order_create(request):
                 order = order,
             )
         #очистка корзины
+        qr  = make_qrr(order.pk, cart)
         cart.clear()
+        
         return render(
-            request=request, template_name=template_name,context={'order':order}
+            request=request, template_name=template_name,context={'order':order, 'qr': qr}
         )
     else:
+        
         if request.user.is_authenticated:
+            ic('get request')
             form = OrderCreateForm(
                 initial={
                     'user':request.user,
@@ -76,6 +107,7 @@ def order_create(request):
     )
 
 
+
 class OrderPayment(DetailView):
     model = Order
     template_name = 'pages/orders/order_payment.html'
@@ -83,27 +115,28 @@ class OrderPayment(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(OrderPayment, self).get_context_data(**kwargs)
-        context['qr'] = self.make_qr(**kwargs)
+        context['qr'] = make_qrr(pk = kwargs['object'].pk)
 
         return context
     
-    def make_qr(self, **kwargs):
-        import qrcode
+    # def make_qr(self, **kwargs):
+    #     import qrcode
 
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.ERROR_CORRECT_L,
-            box_size=10,
-            border=4
-        )
-        qr.add_data("hhtps://uzumbank.uz/ru")
-        qr.make()
-        img = qr.make_image(fill_color ='black', back_color ='white')
-        order_id = kwargs['object'].pk
+    #     qr = qrcode.QRCode(
+    #         version=1,
+    #         error_correction=qrcode.ERROR_CORRECT_L,
+    #         box_size=10,
+    #         border=4
+    #     )
+    #     qr.add_data("hhtps://uzumbank.uz/ru")
+    #     qr.make()
+    #     img = qr.make_image(fill_color ='black', back_color ='white')
+    #     order_id = kwargs['object'].pk
 
-        img.save(f'media/qrs/order_{order_id}_qr.png')
-        return order_id
+    #     img.save(f'media/qrs/order_{order_id}_qr.png')
+    #     return order_id
 
+ 
 class OrderDetailView(DetailView):
     model = Order
     template_name = 'pages/orders/order_detail.html'

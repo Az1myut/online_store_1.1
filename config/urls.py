@@ -26,9 +26,12 @@ urlpatterns = [
     path('contacts/', include('contacts.urls', namespace='contacts.contacts')),
     path('cart/', include('cart.urls', namespace='cart.cart')),\
     path('orders/', include('orders.urls', namespace='orders.orders')),
+    path('users/', include('users.urls', namespace='users.users')),
     #USERS
     path('accounts/login', LoginView.as_view(template_name='users/registration/login.html'), name='login'),
     path('accounts/logout', LogoutView.as_view(template_name='users/registration/logout.html'), name='logout'),
+    #CAPTCHA
+    path('captcha/', include('captcha.urls'))
 ]
 
 
