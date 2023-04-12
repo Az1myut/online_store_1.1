@@ -1,10 +1,15 @@
 
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+
 from django.views.generic import ListView, FormView, DetailView
 from django.views.generic.base import TemplateView
+
 from .forms import ContactFormDB
 from .models import ContactPage
+
+
+
 from icecream import ic
 # Create your views here.
 

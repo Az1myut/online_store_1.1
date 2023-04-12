@@ -1,8 +1,16 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+
 from django.views.generic.base import TemplateView
 from django.forms import modelformset_factory, inlineformset_factory
 from django.forms.formsets import ORDERING_FIELD_NAME
 from django.views.generic import ListView, DetailView
+
+#REST 
+from rest_framework import generics, viewsets
+from .serializers import ProductNameAmmountPriceSerializer, CategorySerializer
+
+from django.db import transaction
+
 from products.models import SingleProduct, Category, ProductImage
 from products.forms import ProductForm, ProductImageForm
 from icecream import ic
@@ -42,9 +50,16 @@ def products_bulk_edit(request):
         if formset.is_valid():
             for form in formset:
                 if form.cleaned_data:
+                    save_point = transaction.savepoint()
                     product = form.save(commit=False)
                     product.order = form.cleaned_data[ORDERING_FIELD_NAME]
-                    product.save()
+                    try:
+
+                        product.save()
+                        transaction.savepoint_commit(save_point)
+                    except:
+                        transaction.rollback()
+                    transaction.commit()
             return redirect('products:products_bulk_edit')
     else:
         formset = ProductFormSet(queryset=SingleProduct.objects.prefetch_related('images'))
@@ -88,6 +103,19 @@ class ProductImageBulkEditListView(TemplateView):
             return render(request, self.template_name, self.get_context_data())
 
         
-        
-   
-        
+#API
+class ProductNameAmmountPriceAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = SingleProduct.objects.all()
+    serializer_class = ProductNameAmmountPriceSerializer
+
+    def get(self, request, *args, **kwargs):
+        product = get_object_or_404(SingleProduct, pk=kwargs['pk'])
+        product.save()
+
+    
+        return self.retrieve(request, *args, **kwargs)
+
+class CategoryAPIView(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    

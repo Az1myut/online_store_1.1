@@ -1,6 +1,6 @@
 
 from icecream import ic
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 from  django.views.generic import (
@@ -9,6 +9,10 @@ from  django.views.generic import (
 from .forms import (
     OrderCreateForm,
 )
+from rest_framework import generics, viewsets
+
+from .serializers import OrderSerializer, OrderPaymentSerializer
+
 from cart.services.cart import Cart
 from django.db import transaction
 from .models import Order, OrderItem
@@ -49,7 +53,6 @@ def order_create(request):
         form = OrderCreateForm(request.POST)
         if form.is_valid():
             order = form.save()
-
             form.clean()
 
         if form.cleaned_data:
@@ -155,3 +158,25 @@ class OrderDetailView(DetailView):
         return context
 
 
+
+#Orders Api
+
+class OrderAPIView(viewsets.ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+class OrderPaymentAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderPaymentSerializer
+    
+    def get(self, request, *args, **kwargs):
+        payment = get_object_or_404(Order, pk=kwargs['pk'])
+        if kwargs['paid']:
+            payment.paid = True
+        else:
+            payment.paid = False
+        payment.save()
+
+        return self.retrieve(request, *args, **kwargs)
+
+        
