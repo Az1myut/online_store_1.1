@@ -2,16 +2,20 @@ from django import forms
 from .models import ContactPageForm
 from .validators import validate_phone_number
 from django.core.exceptions import ValidationError
+
+from captcha.fields import CaptchaField
 from icecream import ic
 from django.utils.translation import gettext_lazy as _
 
-class ContactFormDB(forms.ModelForm):
+class ContactFormDB(forms.Form):
     number = forms.CharField(label='Номер телефона')
+    subject = forms.CharField(max_length=100)
+    name = forms.CharField(max_length=50)
+    email = forms.EmailField()
+    message = forms.CharField()
+    captcha = CaptchaField(label="Решите пример")
 
     class Meta:
-        model = ContactPageForm
-        fields = ('subject', 'name',  'email', 'message')
-
         widgets = {
             'subject': forms.TextInput(attrs={
                 'class': "form-control",

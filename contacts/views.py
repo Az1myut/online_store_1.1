@@ -6,7 +6,7 @@ from django.views.generic import ListView, FormView, DetailView
 from django.views.generic.base import TemplateView
 
 from .forms import ContactFormDB
-from .models import ContactPage
+from .models import ContactPage, ContactPageForm
 
 
 
@@ -29,8 +29,15 @@ class ContactPageDetailView(TemplateView):
         
         form = ContactFormDB(request.POST)
         context['form'] = form
+        
         if form.is_valid():
-            form.save(commit=False)
+            contact = ContactPageForm()
+            data = form.cleaned_data
+            contact.email = data.get('email')
+            contact.name = data.get('name')
+            contact.message = data.get('message')
+            contact.subject = data.get('subject')
+            contact.save()
             return redirect('contacts:success_contact_message')
         else:
             context['message'] = 'Не правильно заполнены данные'
