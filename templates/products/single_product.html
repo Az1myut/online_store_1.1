@@ -1,7 +1,10 @@
 {% extends 'layout/base.html' %}
 {% load static %}
+
+
 {% block content %}
-    
+{% load bbcode_tags %}
+{% bbcode entry.bbcode_content %}
 
     
 <div class="product-big-title-area">
@@ -140,6 +143,10 @@
                                         <div role="tabpanel" class="tab-pane fade in active" id="home">
                                             <h2>Product Description</h2>  
                                             <p> {{ product.description }}</p>
+
+                                            {{ "[quote][b]Какойто комментарий [/b][/quote] " |bbcode }}
+                                            <p>{{ from_view|safe }}</p>
+                                            <p>{{ product.content.rendered }}</p>
 
                                             
                                         </div>

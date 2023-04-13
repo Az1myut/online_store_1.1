@@ -1,5 +1,7 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 from .managers import LatestProductsManager
+from precise_bbcode.fields import BBCodeTextField
 class SingleProduct(models.Model):
     name = models.CharField(verbose_name='Название', max_length=200)
     description = models.TextField(verbose_name='Описание',blank=True)
@@ -11,7 +13,7 @@ class SingleProduct(models.Model):
     in_store = models.BooleanField(verbose_name='Доступен', default=True)
     images = models.ManyToManyField(to='ProductImage', verbose_name='Картины',blank =True)   
     order = models.SmallIntegerField(default=0, db_index=True)
-    
+    content = BBCodeTextField(verbose_name=_('Содержание'), blank = True, null=True)
 
     #CUSTOM MANAGERS
     # latest_products = LatestProductsManager()

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework',
     #APPs
     'captcha',
+    'precise_bbcode'
 ]
 
 MIDDLEWARE = [

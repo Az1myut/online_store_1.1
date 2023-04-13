@@ -4,7 +4,7 @@ from .models import SingleProduct, Category, ProductImage
 # Register your models here.
 
 class SingleProductAdmin(admin.ModelAdmin):
-    list_display = ('pk','name','category','end_price','number_products', 'in_store')
+    list_display = ('pk','name','category','end_price','number_products', 'in_store', 'content')
     list_display_links = ('pk',)
     list_editable = ('name','in_store', 'category',)
 

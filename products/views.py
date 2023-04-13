@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from precise_bbcode.bbcode import get_parser
 
 from django.views.generic.base import TemplateView
 from django.forms import modelformset_factory, inlineformset_factory
@@ -21,16 +22,17 @@ class SingleProductPageDetailView(DetailView):
     context_object_name = 'product'
     model = SingleProduct   
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        parser = get_parser()
+        context['from_view'] = parser.render('[b]Здравствуйте, люди [u]дорогие![/u][/b]')
+        return context
+
 
 class CategoryDetailView(DetailView):
     template_name = 'products/category_view.html'
     context_object_name = 'category'
     model = Category
-
-
-
-
-
 
 
 
