@@ -2,14 +2,31 @@
 from django import forms
 
 from django.core.exceptions import ValidationError
-from .models import SingleProduct, ProductImage
+from .models import SingleProduct, ProductImage, Category
 
+from django.core import validators
 
 class ProductForm(forms.ModelForm):
     error_css_class = 'error'
+
+    document = forms.FileField(
+        label = 'Сопроводительный документ',
+        validators=[validators.FileExtensionValidator(
+            allowed_extensions =(
+                'doc',
+                'docx',
+                'xls',
+                'xlsx',
+                'pdf'
+            )
+        )
+            ],
+        error_messages={'invalid_extension' : 'Этот формат не поддерживается'}
+    )
     class Meta:
         model = SingleProduct
         fields = '__all__'
+
 
     def clean(self):
         super().clean()
@@ -37,8 +54,16 @@ class ProductImageForm(forms.ModelForm):
         if erorrs:
             raise ValidationError(erorrs)
 
-
-
-
-
-
+class CategoryDetailForm(forms.ModelForm):
+    error_css_class = 'error'
+    document = forms.FileField( label='Necessary Document',
+                                validators=[validators.FileExtensionValidator(allowed_extensions=[
+                                   'xlsx',
+                                   'pdf']
+                                  
+                               )],
+                                error_messages={'invalid_extension':'Этот файл не поддерживается'}
+                               )
+    class Meta:
+        model = Category
+        fields = '__all__'

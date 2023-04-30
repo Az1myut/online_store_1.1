@@ -13,7 +13,7 @@ from .serializers import ProductNameAmmountPriceSerializer, CategorySerializer
 from django.db import transaction
 
 from products.models import SingleProduct, Category, ProductImage
-from products.forms import ProductForm, ProductImageForm
+from products.forms import ProductForm, ProductImageForm, CategoryDetailForm
 from icecream import ic
 # Create your views here.
 
@@ -29,12 +29,69 @@ class SingleProductPageDetailView(DetailView):
         return context
 
 
+class ProductDetailEditView(DetailView):
+    template_name = "products/single_product_edit.html"
+    model = SingleProduct
+    context_object_name = "product"
+    form_class = ProductForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = ProductForm(instance=self.get_object())
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = ProductForm(request.POST, request.FILES, instance=self.get_object())
+        if form.is_valid():
+            return self.form_valid(form)
+
+        return render(request, "products/single_product_edit.html", {"form": form})
+
+    def form_valid(self, form):
+        product = form.save(commit=False)
+        ic('goos')
+        product.save()
+        return redirect("products:show_single_product_page", pk=product.pk)
+
+
 class CategoryDetailView(DetailView):
     template_name = 'products/category_view.html'
     context_object_name = 'category'
     model = Category
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category = kwargs['object']
+        ic(kwargs)
+        parser = get_parser()
+        context['from_view'] = parser.render(f'[quote][b]Этот каталог {category.name}  [/b][/quote]')
+        return context
 
+class CategoryDetailEditView(DetailView):
+    context_object_name = 'category'
+    model = Category
+    template_name = 'products/category_detail_edit_view.html'
+    form_class = CategoryDetailForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = CategoryDetailForm(instance=self.get_object())
+        return context
+
+    def post(self, request, *args, **kwargs):
+
+        form = self.form_class(request.POST, request.FILES,
+                               instance=self.get_object())
+        if form.is_valid():
+
+            return self.form_valid(form)
+
+        return render(request, template_name=self.template_name, context={'form': form})
+
+    def form_valid(self, form):
+        category = form.save(commit=False)
+        category.save()
+        return redirect('products:category_view', pk=category.pk)
 
 
 
@@ -103,6 +160,8 @@ class ProductImageBulkEditListView(TemplateView):
             self.get_context_data()['product_image_formset'] = formset
             ic(formset.errors)
             return render(request, self.template_name, self.get_context_data())
+
+
 
         
 #API
