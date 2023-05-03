@@ -72,7 +72,8 @@ class Brands(PageBlock):
         blank = True,
     )
     image_thumbnail = ThumbnailerImageField(
-        resize_source = {'size': (800,800), 'crop':'smart'}, upload_to=thumb_path
+        resize_source = {'size': (800,800), 'crop':'smart'}, upload_to=thumb_path,
+        blank=True
     )
     class Meta:
         verbose_name = _('Бренд')

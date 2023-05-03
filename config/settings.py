@@ -147,7 +147,7 @@ THUMBNAIL_ALIASES = {
     "":{
         'avatar': {'sixe':(50,50), 'crop':True},
         'avatar_100_100': {'sixe':(100,100), 'crop':True},
-        'avatar_100_100_bw': {'sixe':(50,50), 'crop':'smart', 'bw':True}
+        'avatar_100_100_bw': {'sixe':(50,50), 'crop':'smart', 'bw':True},
     }
 }
 

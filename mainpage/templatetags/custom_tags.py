@@ -8,6 +8,7 @@ from django.conf import settings
 from mainpage.models import FooterAbout, Social, NavMenu
 from contacts.models import ContactPage
 from cart.services.cart import Cart
+from mainpage.models import Brands
 
 from icecream import ic 
 
@@ -65,3 +66,9 @@ def nav_menu():
         'nav_items' : nav_items,
     }
     
+@register.inclusion_tag('tags/mainpage_brands.html')
+def mainpage_brands():
+    args = Brands.objects.all()
+    return {
+        'brand_items' : args,
+    }
