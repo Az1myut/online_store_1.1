@@ -122,22 +122,6 @@ class OrderPayment(DetailView):
 
         return context
     
-    # def make_qr(self, **kwargs):
-    #     import qrcode
-
-    #     qr = qrcode.QRCode(
-    #         version=1,
-    #         error_correction=qrcode.ERROR_CORRECT_L,
-    #         box_size=10,
-    #         border=4
-    #     )
-    #     qr.add_data("hhtps://uzumbank.uz/ru")
-    #     qr.make()
-    #     img = qr.make_image(fill_color ='black', back_color ='white')
-    #     order_id = kwargs['object'].pk
-
-    #     img.save(f'media/qrs/order_{order_id}_qr.png')
-    #     return order_id
 
  
 class OrderDetailView(DetailView):

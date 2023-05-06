@@ -15,7 +15,7 @@ class SingleProduct(models.Model):
     order = models.SmallIntegerField(default=0, db_index=True)
     content = BBCodeTextField(verbose_name=_('Содержание'), blank = True, null=True)
     document = models.FileField(    verbose_name=_('Документы'),
-                                    upload_to='documents/%Y/%m/%d/',    blank=True,
+                                    upload_to='documents/produsts/%Y/%m/%d/',    blank=True,
                                     null=True)
 
     # CUSTOM MANAGERS
@@ -42,7 +42,7 @@ class Category(models.Model):
     description = models.TextField(verbose_name ='Описание', blank=True)
     image = models.ImageField(verbose_name='Картина',upload_to = 'category')
     document = models.FileField(    verbose_name=_('Документы'),
-                                    upload_to='documents/%Y/%m/%d/',    blank=True,
+                                    upload_to='documents/categories/%Y/%m/%d/',    blank=True,
                                     null=True)
 
 

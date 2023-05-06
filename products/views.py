@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from precise_bbcode.bbcode import get_parser
+from pathlib import Path
+from django.conf import settings
 
 from django.views.generic.base import TemplateView
 from django.forms import modelformset_factory, inlineformset_factory
 from django.forms.formsets import ORDERING_FIELD_NAME
 from django.views.generic import ListView, DetailView
 
-#REST 
+#REST IMPORTS
 from rest_framework import generics, viewsets
 from .serializers import ProductNameAmmountPriceSerializer, CategorySerializer
 
@@ -14,6 +16,7 @@ from django.db import transaction
 
 from products.models import SingleProduct, Category, ProductImage
 from products.forms import ProductForm, ProductImageForm, CategoryDetailForm
+from pages.forms import AddFileForm
 from icecream import ic
 # Create your views here.
 
@@ -93,8 +96,28 @@ class CategoryDetailEditView(DetailView):
         category.save()
         return redirect('products:category_view', pk=category.pk)
 
-
-
+def category_add_file(request, pk):
+    category = Category.objects.get(pk=pk)
+    if request.method == 'POST':
+        form = AddFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            ic(form.cleaned_data)
+            uploaded_file = request.FILES['file']
+            filename = f'{uploaded_file.name}'
+            file_with_path = Path(settings.CATEGORIES_DOCUMENTS_ROOT, filename)
+            category.document = uploaded_file
+            category.save()
+            with open (file_with_path, 'wb') as destination:
+                for chunk in uploaded_file.chunks():
+                    destination.write(chunk)
+            redirect ('mainpage:show_mainpage')
+    else:
+        form = AddFileForm()
+    context = {'form': form}
+    template_name = 'products/categories_file_add.html'
+    return render(request, template_name, context=context)
+                
+#BULK EDITS WITH FORMSETS
 def products_bulk_edit(request):
     ProductFormSet = modelformset_factory(
         SingleProduct, form=ProductForm, fields=('name', 'description', 'in_store', 'initial_price'),

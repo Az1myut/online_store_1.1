@@ -1,6 +1,4 @@
 import os
-from posixpath import basename
-from tempfile import template
 from django.shortcuts import render, redirect
 from django.views.generic import ListView
 from django.views.generic.base import TemplateView
@@ -25,11 +23,13 @@ def add_file(request):
         if form.is_valid():
             uploaded_file = request.FILES['file']
             ic(uploaded_file)
+            
             file_name = f"{datetime.now().timestamp()}{os.path.splitext(uploaded_file.name)[1]}"
-            ic(file_name)
+            
             file_with_path = Path(settings.FILES_ROOT, file_name)
-            ic(file_with_path)
+       
             with open(file_with_path, 'wb') as destination:
+                ic(destination)
                 for chunk in uploaded_file.chunks():
                     destination.write(chunk)
 
@@ -49,13 +49,21 @@ def get_file(request, filename):
 def index_files(request):
     template_name = "pages/files/indexx.html"
     files = []
+    ic(os.scandir(settings.FILES_ROOT))
     for entry in os.scandir(settings.FILES_ROOT):
+        ic(entry)
         files.append(os.path.basename(entry))
 
-    if not files:
-    
+    if not files: 
         no_files = 'Файлов нет'
         context = {'no_file' : no_files}
     else:
         context = {'files' : files}
     return render(request, template_name, context=context)
+
+def delete_file(request, filename):
+    fn = Path(settings.FILES_ROOT, filename)
+    ic(fn)
+    os.remove(fn)
+
+    return redirect('pages:index_files')

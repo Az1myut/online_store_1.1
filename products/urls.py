@@ -9,6 +9,7 @@ from .views import (
     ProductNameAmmountPriceAPIView,
     CategoryAPIView,
     ProductDetailEditView,
+    category_add_file
 
 )
 router = DefaultRouter()
@@ -23,6 +24,7 @@ urlpatterns = [
     path('products_bulk_edit/', products_bulk_edit, name='products_bulk_edit'),
     path('category/<int:pk>', CategoryDetailView.as_view(), name='category_view'),
     path('category/edit/<int:pk>', CategoryDetailEditView.as_view(), name='category_edit_view'),
+    path('category/<int:pk>/add_file',category_add_file, name='category_add_file' ),
     path('product_images_bulk_edit/', ProductImageBulkEditListView.as_view(), 
                                     name = 'product_image_bulk_edit'),
     path('<int:pk>/product_name_price_ammount/',ProductNameAmmountPriceAPIView.as_view(), 

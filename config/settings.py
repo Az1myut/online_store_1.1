@@ -79,6 +79,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'mainpage.middlewares.menu_page',
             ],
         },
     },
@@ -145,10 +146,10 @@ THUMBNAIL_BASEDIR = 'thumbs'
 
 THUMBNAIL_ALIASES = {
     "":{
-        'avatar': {'sixe':(50,50), 'crop':True},
-        'avatar_100_100': {'sixe':(100,100), 'crop':True},
-        'avatar_100_100_bw': {'sixe':(50,50), 'crop':'smart', 'bw':True},
-    }
+        'avatar': {'size':(50,50), 'crop':True},
+        'avatar_100_100': {'size':(100,100), 'crop':True},
+        'avatar_100_100_bw': {'size':(100, 100), 'crop':'smart', 'bw':True},
+    },
 }
 
 # Default primary key field type
@@ -160,7 +161,7 @@ FILE_UPLOAD_DIRECTORY_PERMISSIONS = None
 
 FILES_ROOT = Path(MEDIA_ROOT, 'files')
 
-
+CATEGORIES_DOCUMENTS_ROOT = Path(MEDIA_ROOT, 'documents/categories')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
